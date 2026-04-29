@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChannelGuard - YouTube Channel Risk Scanner</title>
+<meta name="description" content="Free YouTube channel scanner that detects inauthentic-content risk patterns YouTube uses to terminate channels.">
+<meta property="og:title" content="ChannelGuard - YouTube Channel Risk Scanner">
+<meta property="og:description" content="Scan any YouTube channel for inauthentic-content patterns that trigger automated termination.">
+<meta property="og:type" content="website">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --bg-soft: #141414;
+    --bg-card: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #f5f5f5;
+    --text-dim: #999;
+    --text-faint: #666;
+    --accent: #00d97e;
+    --accent-soft: rgba(0, 217, 126, 0.12);
+    --warn: #ffb547;
+    --danger: #ff5a5a;
+    --radius: 10px;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 48px; }
+  .logo {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+  .logo .accent { color: var(--accent); }
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+  .tagline {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .scan-form {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .scan-form label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .input-row input {
+    flex: 1;
+    min-width: 240px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  .input-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .input-row button {
+    padding: 14px 24px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+  }
+  .input-row button:hover:not(:disabled) { opacity: 0.85; }
+  .input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .hint { font-size: 0.8rem; color: var(--text-faint); margin-top: 10px; }
+
+  .results { display: none; margin-top: 32px; }
+  .results.visible { display: block; }
+  .channel-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .channel-card img { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; }
+  .channel-card h3 { font-size: 1.15rem; }
+  .channel-card .meta { font-size: 0.85rem; color: var(--text-dim); }
+
+  .score-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .score-num {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .score-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 16px 0 8px;
+    position: relative;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.6s ease, background 0.6s ease;
+  }
+  .score-summary { font-size: 0.95rem; color: var(--text-dim); margin-top: 8px; }
+
+  .findings { display: flex; flex-direction: column; gap: 10px; }
+  .finding {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+  .finding.high { border-left-color: var(--danger); }
+  .finding.medium { border-left-color: var(--warn); }
+  .finding.low { border-left-color: var(--accent); }
+  .finding-label { font-weight: 600; margin-bottom: 4px; font-size: 1rem; }
+  .finding-detail { font-size: 0.9rem; color: var(--text-dim); }
+  .finding-severity {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .finding.high .finding-severity { background: rgba(255, 90, 90, 0.15); color: var(--danger); }
+  .finding.medium .finding-severity { background: rgba(255, 181, 71, 0.15); color: var(--warn); }
+  .finding.low .finding-severity { background: var(--accent-soft); color: var(--accent); }
+
+  .clean-result {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    color: var(--text-dim);
+  }
+
+  .gate {
+    margin-top: 28px;
+    padding: 24px;
+    background: linear-gradient(180deg, var(--accent-soft), transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+  .gate h4 { font-size: 1.1rem; margin-bottom: 6px; }
+  .gate p { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 16px; }
+  .gate .input-row input { text-align: center; }
+  .gate-success { color: var(--accent); font-weight: 600; }
+
+  .err {
+    background: rgba(255, 90, 90, 0.1);
+    border: 1px solid rgba(255, 90, 90, 0.3);
+    color: var(--danger);
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    margin-top: 16px;
+    font-size: 0.9rem;
+  }
+
+  footer {
+    margin-top: 64px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--text-dim); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">CHANNEL<span class="accent">GUARD</span></div>
+    <h1>Is YouTube about to terminate your channel?</h1>
+    <p class="tagline">Scan any channel for inauthentic-content patterns YouTube's automated systems use to flag and remove channels. Free, no signup, takes 5 seconds.</p>
+  </header>
+
+  <form class="scan-form" id="scanForm" autocomplete="off">
+    <label for="channelUrl">YouTube channel URL or @handle</label>
+    <div class="input-row">
+      <input id="channelUrl" name="channel_url" type="text" placeholder="https://www.youtube.com/@example or @example" required>
+      <button type="submit" id="scanBtn">Scan</button>
+    </div>
+    <p class="hint">We analyze the last 50 uploads for cadence, title patterns, description boilerplate, and channel-age signals.</p>
+  </form>
+
+  <div id="error" class="err" style="display:none;"></div>
+
+  <div class="results" id="results">
+    <div class="channel-card" id="channelCard"></div>
+    <div class="score-card" id="scoreCard"></div>
+    <div class="findings" id="findings"></div>
+
+    <div class="gate" id="gate">
+      <h4>Get the deeper PDF report + ongoing monitoring</h4>
+      <p>Drop your email for early access. Free for the first 100 creators.</p>
+      <form id="waitlistForm" autocomplete="off">
+        <div class="input-row">
+          <input type="email" id="email" placeholder="you@example.com" required>
+          <button type="submit" id="waitlistBtn">Get on the list</button>
+        </div>
+      </form>
+      <p id="gateMsg" style="margin-top:12px;"></p>
+    </div>
+  </div>
+
+  <footer>
+    A free tool by <a href="https://theoperatorai.io">TheOperatorAI</a> &middot;
+    <a href="/articles/">Articles</a> &middot;
+    <a href="/tools/">More tools</a>
+  </footer>
+
+</div>
+
+<script>
+const API_BASE = "/api/channelguard";
+
+const $ = (id) => document.getElementById(id);
+const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+function showError(msg) {
+  $("error").textContent = msg;
+  $("error").style.display = "block";
+  $("results").classList.remove("visible");
+}
+function clearError() { $("error").style.display = "none"; $("error").textContent = ""; }
+
+function scoreColor(score) {
+  if (score >= 60) return "#ff5a5a";
+  if (score >= 30) return "#ffb547";
+  return "#00d97e";
+}
+function scoreSummary(score, findingCount) {
+  if (findingCount === 0) return "No risk patterns detected on the last 50 uploads.";
+  if (score >= 60) return "Multiple high-risk patterns. Channels matching these signals are routinely flagged.";
+  if (score >= 30) return "Some patterns flagged. Worth reviewing before YouTube's systems do.";
+  return "Light patterns only. Generally low risk.";
+}
+function formatNumber(n) {
+  const x = parseInt(n, 10);
+  if (isNaN(x)) return n;
+  if (x >= 1e6) return (x/1e6).toFixed(1) + "M";
+  if (x >= 1e3) return (x/1e3).toFixed(1) + "K";
+  return String(x);
+}
+
+let lastScanId = null;
+
+$("scanForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearError();
+  const url = $("channelUrl").value.trim();
+  if (!url) return;
+
+  const btn = $("scanBtn");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Scanning...';
+
+  try {
+    const r = await fetch(API_BASE + "/scan", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({channel_url: url}),
+    });
+    const data = await r.json();
+
+    if (!r.ok) {
+      showError(data.message || ({
+        invalid_json: "Bad request.",
+        missing_channel_url: "Enter a channel URL.",
+        channel_not_found: "Couldn't find that channel. Try the full URL or @handle.",
+        youtube_api_failed: "YouTube API call failed. Try again in a minute.",
+        server_misconfigured: "Server isn't fully configured yet.",
+      }[data.error] || "Something went wrong. Try again."));
+      return;
+    }
+
+    lastScanId = data.scan_id;
+    renderResults(data);
+  } catch (err) {
+    showError("Network error. Try again.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Scan";
+  }
+});
+
+function renderResults(data) {
+  const ch = data.channel;
+  $("channelCard").innerHTML = `
+    <img src="${escapeHtml(ch.thumbnail)}" alt="">
+    <div>
+      <h3>${escapeHtml(ch.title)}</h3>
+      <div class="meta">${formatNumber(ch.subscriber_count)} subscribers · ${formatNumber(ch.video_count)} videos · ${data.videos_analyzed} analyzed</div>
+    </div>
+  `;
+
+  const color = scoreColor(data.score);
+  const summary = scoreSummary(data.score, data.findings.length);
+  $("scoreCard").innerHTML = `
+    <div class="score-num" style="color:${color}">${data.score}</div>
+    <div class="score-label">Risk score (out of 100)</div>
+    <div class="score-bar"><div class="score-bar-fill" style="width:${data.score}%; background:${color}"></div></div>
+    <div class="score-summary">${escapeHtml(summary)}</div>
+  `;
+
+  if (data.findings.length === 0) {
+    $("findings").innerHTML = `<div class="clean-result">Clean scan — no risk patterns flagged across the last ${data.videos_analyzed} uploads.</div>`;
+  } else {
+    $("findings").innerHTML = data.findings.map(f => `
+      <div class="finding ${escapeHtml(f.severity)}">
+        <div class="finding-severity">${escapeHtml(f.severity)} risk</div>
+        <div class="finding-label">${escapeHtml(f.label)}</div>
+        <div class="finding-detail">${escapeHtml(f.detail)}</div>
+      </div>
+    `).join("");
+  }
+
+  $("results").classList.add("visible");
+  $("results").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+$("waitlistForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = $("email").value.trim();
+  if (!email) return;
+  const btn = $("waitlistBtn");
+  btn.disabled = true;
+  $("gateMsg").textContent = "";
+
+  try {
+    const r = await fetch(API_BASE + "/waitlist", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({email, scan_id: lastScanId}),
+    });
+    const data = await r.json();
+    if (!r.ok) {
+      $("gateMsg").textContent = data.error === "invalid_email" ? "That email looks off. Try again." : "Something went wrong. Try again.";
+      btn.disabled = false;
+      return;
+    }
+    $("gateMsg").innerHTML = '<span class="gate-success">You\'re on the list. We\'ll email you when the deeper report is ready.</span>';
+    $("email").value = "";
+  } catch (err) {
+    $("gateMsg").textContent = "Network error. Try again.";
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
