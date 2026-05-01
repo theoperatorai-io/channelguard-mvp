@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ChannelGuard Distribution - Admin</title>
+<style>
+:root{--bg:#FAFAF7;--surface:#FFFFFF;--text:#0A0A0A;--text-muted:#5B6470;--border:#E6E6E1;--accent:#FF5A1F;--success:#2D8C5C}
+[data-theme="dark"]{--bg:#0B0D12;--surface:#11151C;--text:#F2F4F7;--text-muted:#8B95A1;--border:#1F2530}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,system-ui,Inter,sans-serif;padding:24px;max-width:980px;margin:0 auto}
+h1{font-family:Georgia,serif;font-size:36px;font-weight:400;margin-bottom:8px}
+.lead{color:var(--text-muted);margin-bottom:32px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;position:relative}
+.card.done{opacity:.55}
+.card h2{font-family:Georgia,serif;font-size:24px;font-weight:400;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card .meta{color:var(--text-muted);font-size:13.5px;margin-bottom:14px}
+.card .meta a{color:var(--accent)}
+.field{margin-bottom:14px}
+.field label{font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);display:block;margin-bottom:6px}
+.field .val{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-family:ui-monospace,monospace;font-size:13.5px;white-space:pre-wrap;word-break:break-word;cursor:pointer;position:relative}
+.field .val:hover{border-color:var(--accent)}
+.field .val.copied::after{content:"Copied!";position:absolute;top:8px;right:8px;background:var(--success);color:white;font-family:sans-serif;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:600}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-muted);user-select:none;cursor:pointer;margin-top:14px}
+.check input{width:18px;height:18px;cursor:pointer}
+.tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;background:var(--bg);color:var(--text-muted);border:1px solid var(--border)}
+.tag.high{background:#fff4e6;color:#cc5f00;border-color:#ffd9b3}
+.tag.urgent{background:#ffe6e6;color:#c00;border-color:#ffb3b3}
+[data-theme="dark"] .tag.high{background:#3a2110;color:#ff9a4f;border-color:#5a330e}
+[data-theme="dark"] .tag.urgent{background:#3a1010;color:#ff7070;border-color:#5a1818}
+.summary{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 24px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;font-size:14px;flex-wrap:wrap;gap:12px}
+.summary strong{color:var(--accent)}
+.summary .stats{display:flex;gap:24px;flex-wrap:wrap}
+.summary .stats span{font-size:13px;color:var(--text-muted)}
+.summary .stats b{color:var(--text);font-size:14px}
+button.theme-btn{position:fixed;top:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;cursor:pointer;color:var(--text);z-index:10}
+.section-header{font-family:Georgia,serif;font-size:20px;font-weight:400;color:var(--text-muted);margin:32px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.live{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:24px}
+.live-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.live-head h3{font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0}
+.live-head .ts{color:var(--text-muted);font-size:12px;font-family:ui-monospace,monospace}
+.live-head .refresh{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;color:var(--text);font-family:inherit}
+.live-head .refresh:hover{border-color:var(--accent);color:var(--accent)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.stat .label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:6px}
+.stat .num{font-family:Georgia,serif;font-size:28px;font-weight:400;line-height:1.1;color:var(--text)}
+.stat .num.hit{color:var(--success)}
+.stat .target{color:var(--text-muted);font-size:13px;margin-left:4px}
+.stat .bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.stat .bar-fill{height:100%;background:var(--accent);transition:width .3s}
+.stat .bar-fill.hit{background:var(--success)}
+.recent-list{font-size:13px;color:var(--text-muted)}
+.recent-list .row{padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px}
+.recent-list .row:last-child{border-bottom:none}
+.recent-list .row .ch{color:var(--text);font-weight:500}
+.recent-list .empty{padding:8px 0;font-style:italic}
+</style>
+</head>
+<body>
+<button class="theme-btn" onclick="(function(){var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}})()">Toggle theme</button>
+
+<h1>ChannelGuard Distribution</h1>
+<p class="lead">Click any value to copy it. Tick the checkbox once posted - state saves to localStorage on this device.</p>
+
+<div class="summary">
+  <div>Progress: <strong id="progress">0 / 7</strong> channels posted</div>
+  <div class="stats">
+    <span>Tool: <b><a href="https://theoperatorai.io/tool/channelguard/" target="_blank" style="color:var(--accent)">/tool/channelguard/</a></b></span>
+    <span>Article: <b><a href="https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html" target="_blank" style="color:var(--accent)">long-form post</a></b></span>
+    <span>Day-14 gate: <b>2026-05-13</b></span>
+    <span>Targets: <b>100 scans / 10 emails / 5 shares</b></span>
+  </div>
+</div>
+
+<div class="live" id="live-stats">
+  <div class="live-head">
+    <h3>Live validation metrics</h3>
+    <div>
+      <span class="ts" id="live-updated">loading...</span>
+      <button class="refresh" onclick="loadStats()">&#8635; Refresh</button>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="label">Scans</div>
+      <div class="num"><span id="stat-scans">-</span><span class="target">/ 100</span></div>
+      <div class="bar"><div class="bar-fill" id="bar-scans" style="width:0%"></div></div>
+    </div>
+    <div class="stat">
+      <div class="label">Waitlist emails</div>
+      <div class="num"><span id="stat-waitlist">-</span><span class="target">/ 10</span></div>
+      <div class="bar"><div class="bar-fill" id="bar-waitlist" style="width:0%"></div></div>
+    </div>
+    <div class="stat">
+      <div class="label">Scans last 24h</div>
+      <div class="num"><span id="stat-24h">-</span></div>
+    </div>
+    <div class="stat">
+      <div class="label">Last scan</div>
+      <div class="num" style="font-size:18px"><span id="stat-last">-</span></div>
+    </div>
+  </div>
+  <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:14px 0 6px">Recent scans</div>
+  <div class="recent-list" id="recent-list"><div class="empty">loading...</div></div>
+</div>
+
+<div class="section-header">Today (before 1pm EDT trader video publish)</div>
+
+<div class="card done" data-id="trader_desc">
+<h2>1. Trader video - description footer <span class="tag" style="background:#e6ffe6;color:#1a7a3a;border-color:#a8e6c0">POSTED BY CLAUDE 2026-04-30</span></h2>
+<div class="meta">Edit at: <a href="https://studio.youtube.com" target="_blank">YouTube Studio</a> &middot; Video <code>qCMw459zFhY</code> &middot; Appended via YouTube Data API videos.update (1286 -> 1503 chars)</div>
+
+<div class="field"><label>Appended text</label><div class="val">---
+Worried about YouTube's inauthentic-content takedowns hitting your channel? I built a free scanner that checks for the exact patterns being flagged - no signup needed:
+https://theoperatorai.io/tool/channelguard/</div></div>
+
+<label class="check"><input type="checkbox" data-id="trader_desc" checked> Posted</label>
+</div>
+
+<div class="section-header">Today (after 1pm EDT publish)</div>
+
+<div class="card done" data-id="trader_pinned">
+<h2>2. Trader video - pinned comment <span class="tag" style="background:#e6ffe6;color:#1a7a3a;border-color:#a8e6c0">PINNED 2026-04-30</span></h2>
+<div class="meta">Comment posted by Claude via YouTube Data API on 2026-04-30 (commentThreadId <code>UgwInJQjh7l9kU52mQJ4AaABAg</code>) and pinned manually by Nick same day. Watch <a href="https://youtu.be/qCMw459zFhY" target="_blank">youtu.be/qCMw459zFhY</a>.</div>
+
+<div class="field"><label>Comment body</label><div class="val">Quick aside for anyone running a YouTube channel that uses AI in any part of the workflow:
+
+YouTube's been quietly terminating "inauthentic content" channels with very specific signals - repeated title templates, boilerplate descriptions, near-identical durations, mechanical posting cadence.
+
+I built a free scanner that checks any channel for those signals so you can spot the pattern before YouTube's classifier does.
+
+&rarr; https://theoperatorai.io/tool/channelguard/
+
+No signup, no email, takes 5 seconds. Curious what your score is - drop it below.</div></div>
+
+<label class="check"><input type="checkbox" data-id="trader_pinned" checked> Posted &amp; pinned</label>
+</div>
+
+<div class="section-header">Today / tomorrow morning</div>
+
+<div class="card" data-id="newsletter">
+<h2>3. Listmonk newsletter <span class="tag" style="background:#fff4cc;color:#8a6d00;border-color:#ffe082">SMTP FIXED - LIST STILL EMPTY (3 INTERNAL SUBS)</span></h2>
+<div class="meta"><strong>SMTP fixed 2026-04-30 23:52 UTC</strong> via fresh Gmail App Password (test campaign #40 delivered cleanly, no 535 errors). Campaign #39 didn't re-send — it's marked finished. Future article auto-publishes (Mon/Wed/Fri) will now email properly. ChannelGuard waitlist signups can be emailed if/when paid tier launches. <strong>Still not a real distribution channel for THIS validation gate</strong> — list only has 3 internal subs (need to grow it via real signups before treating as a channel).</div>
+
+<div class="field"><label>Subject</label><div class="val">I wrote up the 5 patterns YouTube is flagging right now</div></div>
+
+<div class="field"><label>Body</label><div class="val">YouTube's been terminating AI-assisted channels under its "inauthentic content" policy at a pace that's spooking everyone running automated workflows.
+
+I spent the last week reverse-engineering the public-facing cases. Five patterns kept showing up. None individually fatal, but channels hitting three or more are the ones getting hit.
+
+Wrote the full breakdown here, including how to check each one manually:
+https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html
+
+The article has a free scanner at the bottom that automates checking all five against your channel - paste a URL, get a risk score in 5 seconds, no signup.
+
+If you've got a channel - yours, a friend's, a competitor's - give it a run and tell me what you see.
+
+- Nick
+TheOperatorAI</div></div>
+
+<label class="check"><input type="checkbox" data-id="newsletter"> Sent</label>
+</div>
+
+<div class="section-header">Tomorrow</div>
+
+<div class="card" data-id="reddit">
+<h2>4. Reddit r/NewTubers <span class="tag high">~600K subs</span></h2>
+<div class="meta">Post at: <a href="https://www.reddit.com/r/NewTubers/submit" target="_blank">r/NewTubers/submit</a> &middot; Read self-promo rules first &middot; Engage with comments for the first 2-3 hours to keep it in /new &middot; Same body works for r/PartneredYoutube and r/youtubers with light edits</div>
+
+<div class="field"><label>Title</label><div class="val">Spent the week reverse-engineering the recent YouTube AI-content takedowns. 5 patterns that keep showing up</div></div>
+
+<div class="field"><label>Body</label><div class="val">Saw a few channels in my niche get terminated over the last couple months for "inauthentic content." Spent the last week trying to figure out what the actual common signals were across the public-facing takedowns I could verify, plus the warning notices a few creators shared with me. Sharing in case it's useful.
+
+**The 5 signals I kept seeing:**
+
+1. **Title template lock-in** - same structural template on >70% of recent uploads ("Top X [Thing] in [Year]", "I tried [Thing] for [Time]", etc.). Real channels have natural title variance.
+
+2. **Description boilerplate** - identical first ~200 characters on every video. Easiest fingerprint for a spam classifier to grab.
+
+3. **Duration uniformity** - recent-upload duration variance under ~15% of the mean. Real channels swing 5min one week, 12min the next.
+
+4. **Mechanical posting cadence** - uploads spaced almost exactly N hours apart over weeks. Indistinguishable from a cron job, because it usually IS one.
+
+5. **Channel age vs upload velocity** - channels under 6 months uploading >5 videos a week trip a tighter heuristic than older channels at the same volume.
+
+None of these are individually fatal. But channels hitting 3+ at once seem to be the ones getting nuked.
+
+I wrote the full breakdown including how to check each one manually + concrete fixes if you score high: https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html
+
+Mods - if the link breaks rules, happy to remove it; the 5 patterns are useful on their own.
+
+Curious what people here see when they audit themselves. Especially curious if anyone's been flagged and the signals don't match - would refine the list.</div></div>
+
+<label class="check"><input type="checkbox" data-id="reddit"> Posted</label>
+</div>
+
+<div class="card done" data-id="x_organic">
+<h2>5. X / Twitter - organic post <span class="tag" style="background:#e6ffe6;color:#1a7a3a;border-color:#a8e6c0">QUEUED IN BUFFER 2026-04-30</span></h2>
+<div class="meta"><strong>Buffer post id <code>69f3be26c071eb210ff218ec</code></strong>. Will fire on Buffer's next scheduled X slot. Tightened to 261 chars (under X's 280 with t.co URL shortening). If you want it pinned to the @theoperatorai profile after it goes live, do that manually in X.</div>
+
+<div class="field"><label>Posted body</label><div class="val">YouTube's terminating "inauthentic content" channels for 5 signals:
+
+&rarr; repeated title templates
+&rarr; boilerplate descriptions
+&rarr; near-uniform durations
+&rarr; mechanical posting cadence
+&rarr; new channels uploading too fast
+
+Free scanner + breakdown:
+theoperatorai.io/articles/youtube-channel-termination-5-patterns</div></div>
+
+<label class="check"><input type="checkbox" data-id="x_organic" checked> Posted</label>
+</div>
+
+<div class="card" data-id="indiehackers">
+<h2>6. Indie Hackers - Show IH <span class="tag" style="background:#ffe6e6;color:#c00;border-color:#ffb3b3">ACCOUNT LOCKED</span></h2>
+<div class="meta"><strong>Cannot post yet.</strong> IH requires either community participation history or IH Plus subscription. Skip until karma earned via thoughtful comments OR consider IH Plus if cost is acceptable.</div>
+
+<div class="field"><label>Title</label><div class="val">Show IH: Free YouTube channel risk scanner - 2 days from idea to live</div></div>
+
+<div class="field"><label>Body</label><div class="val">**What it is:** ChannelGuard scans any public YouTube channel for the 5 patterns YouTube has been flagging in the recent inauthentic-content takedowns. Returns a risk score in ~5 seconds. Free, no signup.
+
+**Live tool:** https://theoperatorai.io/tool/channelguard/
+**Long-form on the patterns:** https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html
+
+**Stack:**
+- Python aiohttp on a $5 VPS
+- YouTube Data API v3 (free tier, 50K units/day)
+- SQLite for scan history + waitlist
+- Static HTML frontend on nginx
+- ~2 days idea -> live, ~$0 marginal cost per scan
+
+**Why free:** I'm validating whether creators actually want this before committing to the ~$1.5K LLC + cyber insurance + ToS gate to charge for it. The validation thresholds are explicit: 100 scans + 10 waitlist signups + 5 shares within 14 days. Hit them, I build the paid tier ($19/mo for ongoing monitoring + PDF reports). Miss them, this stays free as a public utility and I move on.
+
+**What I'd love from IH:**
+- Scan your channel or a friend's, tell me if the risk signals match what you've actually seen happen
+- Honest take on whether $19/mo for ongoing monitoring is the right ceiling vs floor
+- Any signal you've personally seen flagged that's NOT in the 5 above
+
+I'll incorporate feedback before deciding whether to commit to v2.</div></div>
+
+<label class="check"><input type="checkbox" data-id="indiehackers"> Posted</label>
+</div>
+
+<div class="section-header">Ongoing (X discovery agent)</div>
+
+<div class="card" data-id="x_replies">
+<h2>7. X discovery agent - reply templates</h2>
+<div class="meta">Use these when the discovery agent surfaces creator-economy threads about AI channels, terminations, or monetization risk &middot; Run from @theoperatorai &middot; Don't spam - max 3-5 replies per day, only on relevant threads</div>
+
+<div class="field"><label>Long reply (article link)</label><div class="val">If you're worried about this for your own channel - I broke down the 5 patterns YouTube's been flagging and built a free scanner that checks for them. No signup: theoperatorai.io/articles/youtube-channel-termination-5-patterns</div></div>
+
+<div class="field"><label>Short reply (tool link, char-constrained)</label><div class="val">Wrote up the 5 patterns + free scanner for this exact problem: theoperatorai.io/tool/channelguard</div></div>
+
+<label class="check"><input type="checkbox" data-id="x_replies"> Started replying</label>
+</div>
+
+<div class="section-header">Day-14 validation check (2026-05-13)</div>
+
+<div class="card" data-id="day14_check">
+<h2>8. Pull validation metrics &amp; decide</h2>
+<div class="meta">Decision: HIT thresholds &rarr; commit $1500 LLC+insurance+ToS gate, build paid tier &middot; MISS &rarr; kill the SaaS path, free tool stays as public utility</div>
+
+<div class="field"><label>Scan count (target: 100+)</label><div class="val">ssh root@100.104.77.93 "sqlite3 /opt/channelguard/scans.db 'SELECT COUNT(*) FROM scans;'"</div></div>
+
+<div class="field"><label>Waitlist count (target: 10+)</label><div class="val">ssh root@100.104.77.93 "sqlite3 /opt/channelguard/scans.db 'SELECT COUNT(*) FROM waitlist;'"</div></div>
+
+<div class="field"><label>Share check (target: 5+)</label><div class="val">Search X for: "theoperatorai.io/tool/channelguard" OR "theoperatorai.io/articles/youtube-channel-termination"
+Search Reddit for: theoperatorai.io channelguard</div></div>
+
+<div class="field"><label>Article traffic</label><div class="val">ssh root@100.104.77.93 "grep 'youtube-channel-termination' /var/log/nginx/access.log | wc -l"</div></div>
+
+<label class="check"><input type="checkbox" data-id="day14_check"> Decision made</label>
+</div>
+
+<script>
+// One-shot seed: mark cards Claude completed on 2026-04-30 as done in localStorage
+// (so loadState picks them up consistently). Only runs once per device.
+if (!localStorage.getItem("cg_seeded_2026_04_30_v2")) {
+  ["trader_desc", "trader_pinned", "x_organic"].forEach(function(id){
+    localStorage.setItem("cg_submitted_" + id, "1");
+  });
+  localStorage.setItem("cg_seeded_2026_04_30_v2", "1");
+}
+
+// Live stats fetcher
+function fmtRelative(iso){
+  if (!iso) return "never";
+  var t = new Date(iso).getTime();
+  if (isNaN(t)) return "never";
+  var s = Math.floor((Date.now() - t) / 1000);
+  if (s < 60) return s + "s ago";
+  if (s < 3600) return Math.floor(s/60) + "m ago";
+  if (s < 86400) return Math.floor(s/3600) + "h ago";
+  return Math.floor(s/86400) + "d ago";
+}
+function loadStats(){
+  document.getElementById("live-updated").textContent = "fetching...";
+  fetch("/api/channelguard/stats", {cache: "no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      document.getElementById("stat-scans").textContent = d.scans;
+      document.getElementById("stat-waitlist").textContent = d.waitlist;
+      document.getElementById("stat-24h").textContent = d.last_24h;
+      document.getElementById("stat-last").textContent = fmtRelative(d.last_scan_ts);
+
+      var scanPct = Math.min(100, (d.scans / 100) * 100);
+      var waitPct = Math.min(100, (d.waitlist / 10) * 100);
+      document.getElementById("bar-scans").style.width = scanPct + "%";
+      document.getElementById("bar-waitlist").style.width = waitPct + "%";
+      if (d.scans >= 100) document.getElementById("bar-scans").classList.add("hit");
+      if (d.waitlist >= 10) document.getElementById("bar-waitlist").classList.add("hit");
+
+      var rl = document.getElementById("recent-list");
+      if (!d.recent || d.recent.length === 0){
+        rl.innerHTML = "<div class='empty'>no scans yet</div>";
+      } else {
+        rl.innerHTML = d.recent.map(function(s){
+          return "<div class='row'><span class='ch'>" + (s.channel || "(unknown)") + "</span>" +
+                 "<span>score " + s.score + " &middot; " + fmtRelative(s.ts) + "</span></div>";
+        }).join("");
+      }
+      document.getElementById("live-updated").textContent = "updated " + new Date().toLocaleTimeString();
+    })
+    .catch(function(e){
+      document.getElementById("live-updated").textContent = "error: " + e.message;
+    });
+}
+loadStats();
+setInterval(loadStats, 30000); // auto-refresh every 30s
+</script>
+<script>
+document.querySelectorAll(".field .val").forEach(function(el){
+  el.addEventListener("click", function(){
+    navigator.clipboard.writeText(el.textContent.trim()).then(function(){
+      el.classList.add("copied");
+      setTimeout(function(){ el.classList.remove("copied"); }, 1500);
+    });
+  });
+});
+
+function loadState(){
+  document.querySelectorAll(".check input").forEach(function(cb){
+    var id = cb.getAttribute("data-id");
+    if (localStorage.getItem("cg_submitted_" + id) === "1"){
+      cb.checked = true;
+      cb.closest(".card").classList.add("done");
+    }
+  });
+  updateProgress();
+}
+function saveState(cb){
+  var id = cb.getAttribute("data-id");
+  localStorage.setItem("cg_submitted_" + id, cb.checked ? "1" : "0");
+  cb.closest(".card").classList.toggle("done", cb.checked);
+  updateProgress();
+}
+function updateProgress(){
+  var distributionCards = document.querySelectorAll(".check input[data-id^='trader_'], .check input[data-id^='newsletter'], .check input[data-id^='reddit'], .check input[data-id^='x_'], .check input[data-id^='indiehackers']");
+  var total = distributionCards.length;
+  var done = 0;
+  distributionCards.forEach(function(cb){ if(cb.checked) done++; });
+  document.getElementById("progress").textContent = done + " / " + total;
+}
+document.querySelectorAll(".check input").forEach(function(cb){
+  cb.addEventListener("change", function(){ saveState(cb); });
+});
+loadState();
+
+(function(){
+  var stored = localStorage.getItem("theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", stored || (prefersDark ? "dark" : "light"));
+})();
+</script>
+</body>
+</html>
