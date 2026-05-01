@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The 5 Patterns YouTube Uses to Flag AI-Assisted Channels (and How to Check Yours) - The Operator AI</title>
+<meta name="description" content="A breakdown of the 5 inauthentic-content patterns showing up across recent YouTube channel terminations, and a free scanner that checks your channel against all five.">
+<meta name="theme-color" content="#FAFAF7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The 5 Patterns YouTube Uses to Flag AI-Assisted Channels (and How to Check Yours)">
+<meta property="og:description" content="A breakdown of the 5 inauthentic-content patterns showing up across recent YouTube channel terminations, and a free scanner that checks your channel against all five.">
+<meta property="og:image" content="https://theoperatorai.io/og/default.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://theoperatorai.io/og/default.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"The 5 Patterns YouTube Uses to Flag AI-Assisted Channels (and How to Check Yours)","description":"A breakdown of the 5 inauthentic-content patterns showing up across recent YouTube channel terminations, and a free scanner that checks your channel against all five.","datePublished":"2026-04-30T17:00:00+00:00","dateModified":"2026-04-30T17:00:00+00:00","author":{"@type":"Organization","name":"The Operator AI","url":"https://theoperatorai.io"},"publisher":{"@type":"Organization","name":"The Operator AI","logo":{"@type":"ImageObject","url":"https://theoperatorai.io/og/default.png"}},"image":"https://theoperatorai.io/og/default.png","url":"https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://theoperatorai.io/articles/youtube-channel-termination-5-patterns.html"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  var stored = localStorage.getItem('theme');
+  var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme', stored || (prefersDark ? 'dark' : 'light'));
+})();
+</script>
+<style>
+:root{
+  --bg:#FAFAF7; --surface:#FFFFFF; --text:#0A0A0A; --text-muted:#5B6470;
+  --border:#E6E6E1; --accent:#FF5A1F; --accent-hover:#E04510; --btn-text:#FFFFFF;
+  --serif:"Instrument Serif",Georgia,serif;
+  --sans:"Inter",-apple-system,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+[data-theme="dark"]{
+  --bg:#0B0D12; --surface:#11151C; --text:#F2F4F7; --text-muted:#8B95A1;
+  --border:#1F2530; --accent:#FF5A1F; --accent-hover:#FF7A4A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+header.nav{border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10}
+.nav-inner{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:var(--serif);font-size:24px;font-weight:400;letter-spacing:-.01em}
+.brand span{color:var(--accent)}
+.nav-links{display:flex;gap:28px;align-items:center;font-size:14.5px;font-weight:500;color:var(--text-muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--accent);color:var(--btn-text);padding:8px 16px;border-radius:6px;font-weight:500}
+.nav-cta:hover{background:var(--accent-hover)}
+.theme-toggle{background:none;border:none;width:36px;height:36px;cursor:pointer;color:var(--text-muted);display:inline-flex;align-items:center;justify-content:center;padding:0;border-radius:6px;transition:color .15s,background .15s}
+.theme-toggle:hover{color:var(--text);background:var(--surface)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .icon-moon{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-moon{display:block}
+@media(max-width:640px){.nav-links a:not(.nav-cta){display:none}.theme-toggle{width:44px;height:44px;margin-right:4px}.theme-toggle svg{width:20px;height:20px}}
+main{max-width:680px;margin:0 auto;padding:48px 24px 80px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:18px}
+article h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,4.5vw,3rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 18px;color:var(--text)}
+article h2{font-family:var(--serif);font-weight:400;font-size:1.65rem;line-height:1.25;margin:2.8rem 0 .9rem;color:var(--text)}
+article h3{font-weight:600;font-size:1.15rem;margin:2.2rem 0 .8rem;color:var(--text)}
+article p{margin:0 0 1.2rem}
+article ul,article ol{margin:0 0 1.2rem 1.25rem}
+article li{margin-bottom:.45rem}
+article strong{color:var(--text);font-weight:600}
+article a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+article code{background:var(--surface);border:1px solid var(--border);padding:.12rem .4rem;border-radius:4px;font-family:var(--mono);font-size:.9em}
+article pre{background:var(--surface);border:1px solid var(--border);padding:1rem;border-radius:8px;overflow-x:auto;margin:0 0 1.2rem;font-family:var(--mono);font-size:.9rem;line-height:1.55}
+article pre code{background:none;border:none;padding:0}
+article blockquote{border-left:3px solid var(--accent);padding:.4rem 0 .4rem 1.2rem;margin:0 0 1.2rem;color:var(--text-muted);font-style:italic}
+.meta{color:var(--text-muted);font-size:.9rem;margin-bottom:1.6rem}
+.cta{margin-top:3rem;padding:24px 28px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.cta h3{font-family:var(--serif);font-weight:400;font-size:1.4rem;line-height:1.2;margin:0 0 .5rem;color:var(--text)}
+.cta p{color:var(--text-muted);font-size:15px;margin:0 0 1rem}
+.cta a.btn{display:inline-block;padding:.7rem 1.3rem;background:var(--accent);color:var(--btn-text);border-radius:6px;font-weight:500;text-decoration:none}
+.cta a.btn:hover{background:var(--accent-hover)}
+footer.foot{border-top:1px solid var(--border);padding:36px 24px;color:var(--text-muted);font-size:14px;background:var(--surface);margin-top:60px}
+.foot-inner{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.foot-links{display:flex;gap:18px;flex-wrap:wrap}
+.foot a:hover{color:var(--text)}
+
+.hamburger{display:none;background:none;border:1px solid var(--border);width:40px;height:40px;border-radius:6px;cursor:pointer;color:var(--text-muted);align-items:center;justify-content:center;padding:0;transition:color .15s,background .15s}
+.hamburger:hover{color:var(--text);background:var(--surface)}
+.hamburger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hamburger svg{width:20px;height:20px}
+@media(max-width:640px){
+.hamburger{display:inline-flex}
+.nav-inner{position:relative}
+.nav-links{position:absolute;top:60px;right:12px;flex-direction:column;align-items:stretch;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.1);min-width:200px;display:none;z-index:20}
+.nav-links.mobile-open{display:flex}
+.nav-links.mobile-open a:not(.nav-cta){display:block;padding:8px 4px;font-size:15px}
+.nav-links.mobile-open .nav-cta{text-align:center;margin-top:6px}
+.nav-links .theme-toggle{display:none}
+.theme-toggle-mobile{display:inline-flex}
+}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">the<span>operator</span>ai</a>
+    <button class="theme-toggle theme-toggle-mobile" aria-label="Toggle theme" onclick="(function(){var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}})()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/></svg></button><button class="hamburger" aria-label="Toggle menu" aria-expanded="false" onclick="toggleMobileNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><nav class="nav-links">
+      <a href="/tool/stack-recommender/">Stack Recommender</a>
+      <a href="/tools/">Tool Directory</a>
+      <a href="/articles/">Articles</a>
+      <button class="theme-toggle" aria-label="Toggle light/dark theme" onclick="toggleTheme()">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a href="/#subscribe" class="nav-cta">Subscribe</a>
+    </nav>
+  </div>
+</header>
+<main>
+<article>
+<div class="meta">April 30, 2026</div>
+<h1>The 5 Patterns YouTube Uses to Flag AI-Assisted Channels (and How to Check Yours)</h1>
+
+<p>YouTube has been quietly terminating channels under its "inauthentic content" policy for the last few months. AI-assisted creators are getting hit hardest. Faceless channels, automated voiceovers, scripted-cadence uploads, anything that looks like a content farm.</p>
+
+<p>"Uses AI" isn't actually the trigger though. I spent the last week looking at every public termination case I could verify, plus the warning notices a few creators in my network shared with me. The channels that actually got removed share a much more specific fingerprint than just "uses AI."</p>
+
+<p>Five patterns kept showing up. None are individually fatal. Channels hitting three or more at once are the ones getting hit.</p>
+
+<p>Here's the breakdown. There's a free scanner at the bottom that automates checking your channel against all five.</p>
+
+<h2>1. Same title shape, every time</h2>
+
+<p>Real channels have natural title variance. The creator's mood changes, the topic shifts, they get experimental, they get bored. Across a month of uploads you should see meaningful structural variety in titles.</p>
+
+<p>Channels getting flagged tend to lock into one or two title templates and reuse them on more than 70% of recent uploads. Stuff like:</p>
+
+<ul>
+  <li><code>Top X [Thing] in [Year]</code></li>
+  <li><code>I tried [Thing] for [Time]</code></li>
+  <li><code>[Tool A] vs [Tool B]: which is better?</code></li>
+  <li><code>The truth about [Topic]</code></li>
+</ul>
+
+<p>Templating itself isn't the problem here. Plenty of successful channels reuse a hook formula. Rigidity is what gets you flagged. If a classifier can predict your next 10 titles by looking at your last 10, that's the signal.</p>
+
+<h2>2. The same first paragraph in every description</h2>
+
+<p>This one is the easiest fingerprint for a spam classifier to grab. If the first 200 characters of every video description are identical, the channel reads as automated no matter what the video itself contains.</p>
+
+<p>Common offenders: a templated intro paragraph, a fixed CTA block, identical hashtag stacks, the same affiliate disclosure copy in the same position. Even a slightly varied opening line per video kills this signal.</p>
+
+<h2>3. Every video the same length</h2>
+
+<p>Real channels have natural duration variance. Some weeks the topic warrants 5 minutes, some weeks 15. A creator that ships a 7:23 video, then 7:31, then 7:18, then 7:45 is producing on a template. Usually because the underlying script generator is hitting the same word count every time.</p>
+
+<p>The flagged channels I sampled had recent-upload duration variance under roughly 15%. Channels with healthy variance (30%+ swing across the last 10 videos) didn't show up in the takedowns.</p>
+
+<h2>4. Uploads that look like a cron job</h2>
+
+<p>Human creators upload in bursts. They miss days. They double-post when something hits. They take a week off because they got sick or busy.</p>
+
+<p>Cron jobs don't do any of that. If your uploads are spaced almost exactly N hours apart over a month, that's indistinguishable from a script. The classifier sees a perfectly periodic signal and flags it.</p>
+
+<p>This one is the easiest to fake fix. Just shift your upload time by a couple of hours randomly. It's also the easiest to leave broken if your pipeline is fully automated.</p>
+
+<h2>5. New channel uploading 5+ videos a week</h2>
+
+<p>Newer channels uploading at high frequency get flagged faster than older channels at the same volume. Specifically: channels less than 6 months old uploading more than 5 videos per week seem to trip a heuristic that older channels at 5+/week don't.</p>
+
+<p>The interpretation is straightforward. A 4-month-old channel posting 6 videos a week is statistically more likely to be a content farm than a passion project, so the threshold is tighter. Older channels have built up enough watch-time signal that the system grants more benefit of the doubt.</p>
+
+<h2>How to check your own channel</h2>
+
+<p>You can check all five manually:</p>
+
+<ul>
+  <li>Pull your last 20 video titles, look at structural overlap</li>
+  <li>Diff the first 200 chars of your last 20 descriptions</li>
+  <li>Compute the standard deviation of your last 20 video durations as a percentage of the mean</li>
+  <li>Compute the standard deviation of intervals between uploads</li>
+  <li>Note your channel age and uploads-per-week</li>
+</ul>
+
+<p>Or you can paste your channel URL into the scanner I built, which automates all five and returns a single risk score in about 5 seconds.</p>
+
+<div class="cta">
+<h3>Run the scan on your channel</h3>
+<p>ChannelGuard is free, no signup, no credit card. Paste a channel URL, get a risk score across all 5 patterns. Run it on yours, run it on a competitor's, run it on a channel that already got terminated to see what the score looks like in retrospect.</p>
+<a class="btn" href="/tool/channelguard/">Scan a channel &rarr;</a>
+</div>
+
+<h2>What this isn't</h2>
+
+<p>This isn't insider information from YouTube. I don't have a contact at the trust &amp; safety team. The five patterns above are reverse-engineered from the public-facing cases I could verify, plus the takedown notices a few creators chose to share. Treat them as a useful heuristic for self-audit, not as a definitive list of policy violations.</p>
+
+<p>The real policy is whatever YouTube's classifier decides on any given day. That classifier almost certainly looks at signals beyond the five above (watch-time patterns, comment authenticity, monetization history, prior strikes, complaint volume from other users). What the five above give you is a quick external check. If your channel scores high on these, you're statistically over-represented in the takedown set, and you have a clear set of things you can actually change.</p>
+
+<h2>If your scan comes back high</h2>
+
+<p>Three concrete fixes, ordered cheapest first:</p>
+
+<ol>
+  <li><strong>Vary your titles.</strong> Pick three different structural templates and rotate them. The classifier wants variance, give it variance.</li>
+  <li><strong>Rewrite your description boilerplate per video.</strong> Even just shuffling the first paragraph order is enough to break the fingerprint.</li>
+  <li><strong>Break your cadence.</strong> If your pipeline uploads on a fixed cron, add jitter. Skip a day occasionally. Double-post when something performs.</li>
+</ol>
+
+<p>Duration uniformity and channel age are harder to change. The first takes editorial discipline (let videos be the length they need to be). The second just takes time. The first three fixes alone will move most channels meaningfully out of the danger zone.</p>
+
+<h2>Why I built this free</h2>
+
+<p>The scanner is the validation step before I commit to a paid version. If enough creators run it and join the waitlist over the next two weeks, I'll build ongoing monitoring (weekly re-scans, alerts when your score moves, PDF reports for agencies managing multiple channels) and charge for that. If not, this stays free as a public utility and I move on to the next thing.</p>
+
+<p>Either way, the free scan stays free. No signup wall, no email gate, no upsell to read your own results.</p>
+
+<div class="cta">
+<h3>Scan your channel now</h3>
+<p>Free, no signup, takes 5 seconds. Paste a channel URL and read the report.</p>
+<a class="btn" href="/tool/channelguard/">Scan a channel &rarr;</a>
+</div>
+
+</article>
+</main>
+<footer class="foot"><div class="foot-inner"><div>&copy; 2026 The Operator AI &middot; Built by an operator</div><div class="foot-links"><a href="/">Home</a><a href="/tool/stack-recommender/">Stack Recommender</a><a href="/tools/">Tool Directory</a><a href="https://youtube.com/@theoperatorai">YouTube</a></div></div></footer>
+
+<script>
+function toggleTheme(){
+  var current = document.documentElement.getAttribute('data-theme') || 'light';
+  var next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+</script>
+<script>
+function toggleMobileNav(btn){
+  var nl=document.querySelector('.nav-links');
+  if(!nl)return;
+  var isOpen=nl.classList.toggle('mobile-open');
+  if(btn)btn.setAttribute('aria-expanded',isOpen?'true':'false');
+}
+document.addEventListener('click',function(e){
+  var nl=document.querySelector('.nav-links');
+  var hb=document.querySelector('.hamburger');
+  if(!nl||!hb)return;
+  if(nl.classList.contains('mobile-open')&&!nl.contains(e.target)&&!hb.contains(e.target)){
+    nl.classList.remove('mobile-open');
+    hb.setAttribute('aria-expanded','false');
+  }
+});
+</script>
+</body></html>

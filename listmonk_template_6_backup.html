@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+<title>{{ .Campaign.Subject }}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{background:#0a0a0a;font-family:system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.7;margin:0;color:#e0e0e0}
+.header{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:32px 24px;text-align:center;border-bottom:3px solid #f59e0b}
+.header h1{color:#f59e0b;font-size:28px;margin:0 0 4px;font-weight:800;letter-spacing:-0.5px}
+.header p{color:#94a3b8;font-size:14px;margin:0}
+.wrap{background:#1a1a1a;padding:32px 24px;max-width:600px;margin:0 auto}
+.wrap h2{color:#f59e0b;font-size:22px;margin:28px 0 12px;border-bottom:1px solid #333;padding-bottom:8px}
+.wrap h3{color:#e2e8f0;font-size:18px;margin:20px 0 8px}
+.wrap a{color:#60a5fa;text-decoration:none}
+.wrap a:hover{color:#93c5fd;text-decoration:underline}
+.wrap ul,.wrap ol{padding-left:20px}
+.wrap li{margin-bottom:8px}
+.wrap blockquote{border-left:3px solid #f59e0b;margin:16px 0;padding:8px 16px;background:#222;border-radius:0 4px 4px 0}
+.cta{text-align:center;margin:24px 0}
+.cta a{background:#f59e0b;color:#0a0a0a !important;padding:12px 28px;border-radius:6px;font-weight:700;text-decoration:none !important;display:inline-block;font-size:15px}
+.cta a:hover{background:#d97706}
+.footer{text-align:center;padding:24px;font-size:12px;color:#666;background:#111}
+.footer a{color:#666;margin:0 8px}
+@media(max-width:600px){.wrap{padding:20px 16px}.header h1{font-size:22px}}
+</style>
+</head>
+<body style="background:#0a0a0a">
+<div class="header">
+<h1>THE OPERATOR DAILY</h1>
+<p>AI Automation Insights for Builders &amp; Operators</p>
+</div>
+<div class="wrap">
+{{ template "content" . }}
+</div>
+<div class="footer">
+<p><a href="{{ UnsubscribeURL }}">Unsubscribe</a> &middot; <a href="{{ MessageURL }}">View in browser</a></p>
+<p>&copy; 2026 The Operator Daily &middot; AI Agents Lab</p>
+{{ TrackView }}
+</div>
+</body>
+</html>

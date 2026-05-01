@@ -429,12 +429,41 @@ async def handle_health(request):
     return web.json_response({"ok": True, "yt_key_present": bool(YOUTUBE_API_KEY)})
 
 
+async def handle_stats(request):
+    """Public stats endpoint for the admin dashboard live counter."""
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        scans = conn.execute("SELECT COUNT(*) FROM scans").fetchone()[0]
+        waitlist = conn.execute("SELECT COUNT(*) FROM waitlist").fetchone()[0]
+        last_24h = conn.execute(
+            "SELECT COUNT(*) FROM scans WHERE ts >= datetime('now','-1 day')"
+        ).fetchone()[0]
+        last_ts_row = conn.execute("SELECT MAX(ts) FROM scans").fetchone()
+        last_scan_ts = last_ts_row[0] if last_ts_row else None
+        recent = conn.execute(
+            "SELECT id, ts, channel_title, score FROM scans ORDER BY id DESC LIMIT 10"
+        ).fetchall()
+    finally:
+        conn.close()
+    return web.json_response({
+        "scans": scans,
+        "waitlist": waitlist,
+        "last_24h": last_24h,
+        "last_scan_ts": last_scan_ts,
+        "recent": [
+            {"id": r[0], "ts": r[1], "channel": r[2], "score": r[3]}
+            for r in recent
+        ],
+    })
+
+
 def main():
     init_db()
     app = web.Application(client_max_size=64 * 1024)
     app.router.add_post("/api/channelguard/scan", handle_scan)
     app.router.add_post("/api/channelguard/waitlist", handle_waitlist)
     app.router.add_get("/api/channelguard/health", handle_health)
+    app.router.add_get("/api/channelguard/stats", handle_stats)
     log.info("ChannelGuard listening on 127.0.0.1:%d (yt_key=%s)", PORT, "yes" if YOUTUBE_API_KEY else "MISSING")
     web.run_app(app, host="127.0.0.1", port=PORT, access_log=None)
 
