@@ -55,8 +55,7 @@ The article has a free scanner at the bottom that automates checking all five ag
 
 If you've got a channel — yours, a friend's, a competitor's — give it a run and tell me what you see.
 
-— Nick
-TheOperatorAI
+— TheOperatorAI
 ```
 
 **Notes:**

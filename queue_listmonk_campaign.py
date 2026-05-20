@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Create the ChannelGuard promotional campaign as a Listmonk draft.
 
-Leaves it in 'draft' state for Nick to start manually from the Listmonk admin
+Leaves it in 'draft' state for manual start from the Listmonk admin
 (consistent with the existing newsletter approval gate). Outputs the campaign
 ID + admin URL.
 """
@@ -22,8 +22,7 @@ BODY_HTML = """<p>YouTube's been terminating AI-assisted channels under its "ina
 
 <p>If you've got a channel &mdash; yours, a friend's, a competitor's &mdash; give it a run and tell me what you see.</p>
 
-<p>&mdash; Nick<br>
-TheOperatorAI</p>
+<p>&mdash; TheOperatorAI</p>
 """
 
 
